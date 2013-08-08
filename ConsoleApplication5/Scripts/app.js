@@ -2,7 +2,9 @@
     "use strict";
 
     function parse(spec) {
-        vg.parse.spec(spec, function (chart) { chart({ el: "#vis" }).update(); });
+        vg.parse.spec(spec, function (chart) {
+            chart({ el: "#vis" }).update();
+        });
     }
 
     $(document).ready(function () {
@@ -13,9 +15,7 @@
         chartHub = $.connection.chartHub;
         if (chartHub) {
             chartHub.client.parse = function (spec) {
-                var data = JSON.parse(spec);
-                parse(data);
-                console.log('Server called parse(' + spec + ')');
+                parse(JSON.parse(spec));
             };
 
             // Kick off the hub.

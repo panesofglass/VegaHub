@@ -23,45 +23,30 @@ open Microsoft.Owin.Hosting
 open Newtonsoft.Json
 open ImpromptuInterface.FSharp
 
-type ChartHub() =
-    inherit Hub()
+module WebApp =
+    type ChartHub() =
+        inherit Hub()
 
-let attachHub (app: IAppBuilder) =
-    let config = new HubConfiguration(EnableJSONP = true)
-    app.MapSignalR(config) |> ignore
-    // TODO: Prefer default files.
-    //app.UseDefaultFiles("""M:\Code\ConsoleApplication5\ConsoleApplication5""") |> ignore
-    // TODO: either pass in the path or detect it properly. FSI makes this hard.
-    app.UseStaticFiles("""M:\Code\ConsoleApplication5\ConsoleApplication5""") |> ignore
+    let private attachHub (app: IAppBuilder) =
+        let config = new HubConfiguration(EnableJSONP = true)
+        app.MapSignalR(config) |> ignore
+        // TODO: Prefer default files.
+        //app.UseDefaultFiles("""M:\Code\ConsoleApplication5\ConsoleApplication5""") |> ignore
+        // TODO: either pass in the path or detect it properly. FSI makes this hard.
+        app.UseStaticFiles("""M:\Code\ConsoleApplication5\ConsoleApplication5""") |> ignore
 
-let sendSpec (spec: string) (hub: IHubContext) : unit =
-    hub.Clients.All?parse spec 
+    let launch (url: string) =
+        let disposable = WebApp.Start(url, Action<_> attachHub)
+        Console.WriteLine("Running chart hub on " + url)
+        // TODO: Use canopy?
+        Process.Start(url + "/index.html") |> ignore
+        disposable
 
-let launch (url: string) =
-    use __ = WebApp.Start(url, Action<_> attachHub)
-    Console.WriteLine("Running chart hub on " + url)
-    // TODO: Use canopy?
-    Process.Start(url + "/index.html") |> ignore
-    GlobalHost.ConnectionManager.GetHubContext<ChartHub>()
+module Vega =
+    let private sendSpec (spec: string) (hub: IHubContext) : unit =
+        hub.Clients.All?parse spec 
 
-[<CLIMutable>]
-type Point = { x: int; y: int }
-
-[<EntryPoint>]
-let main argv = 
-    let url = "http://localhost:8081"
-    use __ = WebApp.Start(url, Action<_> attachHub)
-    Console.WriteLine("Running chart hub on " + url)
-    // TODO: Use canopy?
-    //Process.Start(url + "/index.html") |> ignore
-    let hub = GlobalHost.ConnectionManager.GetHubContext<ChartHub>()
-
-    //let hub = launch "http://localhost:8081"
-
-    Console.WriteLine("Press any key to send a spec.")
-    Console.ReadKey() |> ignore
-
-    let toJSON data =
+    let private toBarJSON data =
         JsonConvert.SerializeObject(data)
         |> sprintf """{
   "width": 400,
@@ -113,6 +98,20 @@ let main argv =
   ]
 }"""
 
+    let bar data = 
+        GlobalHost.ConnectionManager.GetHubContext<WebApp.ChartHub>()
+        |> sendSpec (data |> toBarJSON)
+
+[<CLIMutable>]
+type Point = { x: int; y: int }
+
+[<EntryPoint>]
+let main argv = 
+    let disposable = WebApp.launch "http://localhost:8081"
+
+    Console.WriteLine("Press any key to send a spec.")
+    Console.ReadKey() |> ignore
+
     let data = [|
         {x = 1;  y = 28}
         {x = 2;  y = 55}
@@ -137,14 +136,22 @@ let main argv =
     |]
 
     // Simulate real-time updates
-    async {
-        for i in 0..10 do
-            let data' = data |> Array.map (fun p -> {x = p.x; y = Math.Max(p.y - i, 0)})
-            let spec = data' |> toJSON
-            hub |> sendSpec spec
-            do! Async.Sleep 250
-    } |> Async.RunSynchronously
+    let rand = Random(42)
+    let rec loop data iter = async {
+        let data' =
+            Array.append data [| {x = data.Length; y = rand.Next(0, 100)} |]
+
+        data' |> Vega.bar
+
+        do! Async.Sleep 100
+
+        if iter = 0 then () else
+        return! loop data' <| iter - 1
+    }
+    
+    loop data 25 |> Async.RunSynchronously
 
     Console.WriteLine("Press any key to stop.")
     Console.ReadKey() |> ignore
+    disposable.Dispose()
     0 // return an integer exit code
