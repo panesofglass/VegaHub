@@ -20,6 +20,7 @@ open Owin
 open Microsoft.AspNet.SignalR
 open Microsoft.Owin.StaticFiles
 open Microsoft.Owin.Hosting
+open Newtonsoft.Json
 open ImpromptuInterface.FSharp
 
 type ChartHub() =
@@ -43,38 +44,33 @@ let launch (url: string) =
     Process.Start(url + "/index.html") |> ignore
     GlobalHost.ConnectionManager.GetHubContext<ChartHub>()
 
+[<CLIMutable>]
+type Point = { x: int; y: int }
+
 [<EntryPoint>]
 let main argv = 
     let url = "http://localhost:8081"
     use __ = WebApp.Start(url, Action<_> attachHub)
     Console.WriteLine("Running chart hub on " + url)
     // TODO: Use canopy?
-    Process.Start(url + "/index.html") |> ignore
+    //Process.Start(url + "/index.html") |> ignore
     let hub = GlobalHost.ConnectionManager.GetHubContext<ChartHub>()
 
     //let hub = launch "http://localhost:8081"
 
     Console.WriteLine("Press any key to send a spec.")
     Console.ReadKey() |> ignore
-    hub |> sendSpec """{
+
+    let toJSON data =
+        JsonConvert.SerializeObject(data)
+        |> sprintf """{
   "width": 400,
   "height": 200,
   "padding": {"top": 10, "left": 30, "bottom": 30, "right": 10},
   "data": [
     {
       "name": "table",
-      "values": [
-        {"x": 1,  "y": 28}, {"x": 2,  "y": 55},
-        {"x": 3,  "y": 43}, {"x": 4,  "y": 91},
-        {"x": 5,  "y": 81}, {"x": 6,  "y": 53},
-        {"x": 7,  "y": 19}, {"x": 8,  "y": 87},
-        {"x": 9,  "y": 52}, {"x": 10, "y": 48},
-        {"x": 11, "y": 24}, {"x": 12, "y": 49},
-        {"x": 13, "y": 87}, {"x": 14, "y": 66},
-        {"x": 15, "y": 17}, {"x": 16, "y": 27},
-        {"x": 17, "y": 68}, {"x": 18, "y": 16},
-        {"x": 19, "y": 49}, {"x": 20, "y": 15}
-      ]
+      "values": %s
     }
   ],
   "scales": [
@@ -116,6 +112,38 @@ let main argv =
     }
   ]
 }"""
+
+    let data = [|
+        {x = 1;  y = 28}
+        {x = 2;  y = 55}
+        {x = 3;  y = 43}
+        {x = 4;  y = 91}
+        {x = 5;  y = 81}
+        {x = 6;  y = 53}
+        {x = 7;  y = 19}
+        {x = 8;  y = 87}
+        {x = 9;  y = 52}
+        {x = 10; y = 48}
+        {x = 11; y = 24}
+        {x = 12; y = 49}
+        {x = 13; y = 87}
+        {x = 14; y = 66}
+        {x = 15; y = 17}
+        {x = 16; y = 27}
+        {x = 17; y = 68}
+        {x = 18; y = 16}
+        {x = 19; y = 49}
+        {x = 20; y = 15}
+    |]
+
+    // Simulate real-time updates
+    async {
+        for i in 0..10 do
+            let data' = data |> Array.map (fun p -> {x = p.x; y = Math.Max(p.y - i, 0)})
+            let spec = data' |> toJSON
+            hub |> sendSpec spec
+            do! Async.Sleep 250
+    } |> Async.RunSynchronously
 
     Console.WriteLine("Press any key to stop.")
     Console.ReadKey() |> ignore
