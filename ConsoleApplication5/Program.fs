@@ -51,7 +51,14 @@ let launch (url: string) =
 
 [<EntryPoint>]
 let main argv = 
-    let hub = launch "http://localhost:8081"
+    let url = "http://localhost:8081"
+    use __ = WebApp.Start(url, Action<_> attachHub)
+    Console.WriteLine("Running chart hub on " + url)
+    // TODO: Use canopy?
+    Process.Start(url + "/index.html") |> ignore
+    let hub = GlobalHost.ConnectionManager.GetHubContext<ChartHub>()
+
+    //let hub = launch "http://localhost:8081"
 
     Console.WriteLine("Press any key to send a message.")
     Console.ReadKey() |> ignore
