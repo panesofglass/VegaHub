@@ -44,6 +44,30 @@
 <p>Add this to your NuGet package sources by going to Tools -&gt; Library Package Manager -&gt; Package Manager Settings and creating a new package source for <a href="http://www.myget.org/F/aspnetwebstacknightly">http://www.myget.org/F/aspnetwebstacknightly</a></p>
 
 <p>Once you add this package source, you should build from the command line using build.bat in order to download NuGet.exe.</p>
+
+<pre><span class="o">#</span><span class="n">load</span> <span class="s2">"WebApp.fs"</span>
+<span class="o">#</span><span class="n">load</span> <span class="s2">"Vega.fs"</span>
+
+<span class="k">open</span> <span class="nc">System</span>
+<span class="k">open</span> <span class="nc">VegaHub</span>
+<span class="k">open</span> <span class="nn">VegaHub</span><span class="p">.</span><span class="nc">Vega</span>
+
+<span class="k">let</span> <span class="n">disposable</span> <span class="o">=</span> <span class="nn">WebApp</span><span class="p">.</span><span class="n">launch</span> <span class="s2">"http://localhost:8081"</span>
+
+<span class="c1">// Simulate real-time updates</span>
+<span class="k">let</span> <span class="n">rand</span> <span class="o">=</span> <span class="nc">Random</span><span class="o">(</span><span class="mi">42</span><span class="o">)</span>
+<span class="k">let</span> <span class="k">rec</span> <span class="n">loop</span> <span class="n">data</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">async</span> <span class="o">{</span>
+    <span class="k">let</span> <span class="n">data'</span> <span class="o">=</span> <span class="nn">Array</span><span class="p">.</span><span class="n">append</span> <span class="n">data</span> <span class="o">[|</span> <span class="o">{</span><span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="nc">Length</span><span class="o">;</span> <span class="n">y</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="nc">Next</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">100</span><span class="o">)}</span> <span class="o">|]</span>
+    <span class="n">data'</span> <span class="o">|&gt;</span> <span class="nn">Vega</span><span class="p">.</span><span class="n">bar</span>
+    <span class="k">do</span><span class="o">!</span> <span class="nn">Async</span><span class="p">.</span><span class="nc">Sleep</span> <span class="mi">100</span>
+    <span class="k">if</span> <span class="n">iter</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="bp">()</span> <span class="k">else</span>
+    <span class="k">return</span><span class="o">!</span> <span class="n">loop</span> <span class="n">data'</span> <span class="o">&lt;|</span> <span class="n">iter</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="o">}</span>
+
+<span class="n">loop</span> <span class="o">[||]</span> <span class="mi">25</span> <span class="o">|&gt;</span> <span class="nn">Async</span><span class="p">.</span><span class="nc">RunSynchronously</span>
+
+<span class="n">disposable</span><span class="o">.</span><span class="nc">Dispose</span><span class="bp">()</span>
+</pre>
         </section>
 
         <footer>
