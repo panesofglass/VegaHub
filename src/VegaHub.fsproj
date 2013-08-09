@@ -6,11 +6,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>50151d7a-5e87-4535-8150-2f63a68d0040</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>ConsoleApplication5</RootNamespace>
-    <AssemblyName>ConsoleApplication5</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>VegaHub</RootNamespace>
+    <AssemblyName>VegaHub</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <Name>ConsoleApplication5</Name>
+    <Name>VegaHub</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,7 +40,6 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')" />
   <ItemGroup>
-    <Compile Include="Program.fs" />
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="index.html" />
@@ -51,6 +50,9 @@
     <Content Include="Scripts\jquery.signalR-2.0.0-rtm1-130808-b140.min.js" />
     <Content Include="Scripts\jquery.signalR-2.0.0-rtm1-130808-b140.js" />
     <Content Include="Scripts\app.js" />
+    <Compile Include="WebApp.fs" />
+    <Compile Include="Vega.fs" />
+    <None Include="Script.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ImpromptuInterface">
