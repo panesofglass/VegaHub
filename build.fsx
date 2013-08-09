@@ -62,12 +62,16 @@ Target "BuildApp" (fun _ ->
         |> Log "AppBuild-Output: "
 )
 
+Target "CopyLicense" (fun _ ->
+    [ "LICENSE.txt" ] |> CopyTo buildDir
+)
+
 Target "Deploy" DoNothing
 Target "Default" DoNothing
 
 (* Build Order *)
 "Clean"
-    ==> "BuildApp"
+    ==> "BuildApp" <=> "CopyLicense"
     ==> "Deploy"
 
 "Default" <== ["Deploy"]
