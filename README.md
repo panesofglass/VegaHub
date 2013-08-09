@@ -3,8 +3,17 @@ VegaHub
 
 A SignalR Hub Utility for data scientists to push Vega charts from F# Interactive
 
-Building VegaHub
-----------------
+Current Status
+--------------
+
+Proof-of-Concept
+
+### Available charts
+
+* Vega.bar
+
+Building
+--------
 
 VegaHub relies on several packages in the ASP.NET Web Stack nightly builds. You will need to add a reference to the MyGet feed in order to successfully build and run the script.
 
