@@ -39,6 +39,18 @@ let sources = __SOURCE_DIRECTORY__ @@ "src"
 (* tools *)
 let nugetPath = ".nuget/NuGet.exe"
 
+let RestorePackageParamF = 
+  fun _ ->{ ToolPath = nugetPath
+            Sources = []
+            TimeOut = System.TimeSpan.FromMinutes 5.
+            OutputPath = "./packages" 
+           } :Fake.RestorePackageHelper.RestorePackageParams
+
+let RestorePackages2() = 
+  !! "./**/packages.config"
+  |> Seq.iter (RestorePackage RestorePackageParamF)
+RestorePackages2()
+
 (* files *)
 let appReferences =
     !+ "src/**/*.fsproj" 
