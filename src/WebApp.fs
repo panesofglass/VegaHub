@@ -10,8 +10,7 @@ type ChartHub() =
     inherit Hub()
 
 let private attachHub (app: IAppBuilder) =
-    let config = new HubConfiguration(EnableJSONP = true)
-    app.MapSignalR(config)
+    app.MapSignalR()
 
 let private hostFiles (app: IAppBuilder) =
     // TODO: Prefer default files.
