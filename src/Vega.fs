@@ -1,69 +1,131 @@
 ﻿module VegaHub.Vega
 
 open System
+open System.Collections.Generic
+open System.Diagnostics
 open Microsoft.AspNet.SignalR
 open Newtonsoft.Json
 open ImpromptuInterface.FSharp
 open VegaHub
 
+(**
+ * Vega Grammar
+ *)
+
+[<CLIMutable>]
+type Padding =
+    { Top    : int
+      Left   : int
+      Bottom : int
+      Right  : int }
+
 [<CLIMutable>]
 type Point = { x: int; y: int }
 
-let private sendSpec (spec: string) (hub: IHubContext) : unit =
-    hub.Clients.All?parse spec 
+[<CLIMutable>]
+type Data = { Name : string; Values : Point[] }
 
-let private toBarJSON data =
-    JsonConvert.SerializeObject(data)
-    |> sprintf """{
-  "width": 400,
-  "height": 200,
-  "padding": {"top": 10, "left": 30, "bottom": 30, "right": 10},
-  "data": [
-    {
-      "name": "table",
-      "values": %s
-    }
-  ],
-  "scales": [
-    {
-      "name": "x",
-      "type": "ordinal",
-      "range": "width",
-      "domain": {"data": "table", "field": "data.x"}
-    },
-    {
-      "name": "y",
-      "range": "height",
-      "nice": true,
-      "domain": {"data": "table", "field": "data.y"}
-    }
-  ],
-  "axes": [
-    {"type": "x", "scale": "x"},
-    {"type": "y", "scale": "y"}
-  ],
-  "marks": [
-    {
-      "type": "rect",
-      "from": {"data": "table"},
-      "properties": {
-        "enter": {
-          "x": {"scale": "x", "field": "data.x"},
-          "width": {"scale": "x", "band": true, "offset": -1},
-          "y": {"scale": "y", "field": "data.y"},
-          "y2": {"scale": "y", "value": 0}
-        },
-        "update": {
-          "fill": {"value": "steelblue"}
-        },
-        "hover": {
-          "fill": {"value": "red"}
+[<CLIMutable>]
+type ScaleDomain = { Data : string; Field : string }
+
+[<CLIMutable>]
+type Scale =
+    { Name   : string
+      Nice   : bool
+      Range  : string 
+      Type   : string
+      Domain : ScaleDomain }
+
+[<CLIMutable>]
+type Axis = { Type : string; Scale : string }
+
+[<CLIMutable>]
+type MarkFrom = { Data : string }
+
+[<CLIMutable>]
+type Mark =
+    { Type       : string
+      From       : MarkFrom
+      Properties : IDictionary<string, obj> } // TODO: Create a typed wrapper with property accessors
+
+[<CLIMutable>]
+type Spec =
+    { Width   : int
+      Height  : int
+      Padding : Padding
+      Data    : Data[]
+      Scales  : Scale[]
+      Axes    : Axis[]
+      Marks   : Mark[] }
+
+(**
+ * Vega Templates
+ *)
+
+module Templates =
+    let bar =
+        { Width = 400
+          Height = 200
+          Padding = { Top = 10; Left = 30; Bottom = 30; Right = 10 }
+          Data = [| { Name = "table"; Values = [||] } |]
+          Scales =
+            [|
+              {
+                Name = "x"
+                Type = "ordinal"
+                Range = "width"
+                Nice = false
+                Domain = { Data = "table"; Field = "data.x" }
+              }
+              {
+                Name = "y"
+                Type = null
+                Range = "height"
+                Nice = true
+                Domain = { Data = "table"; Field = "data.y" }
+              }
+            |]
+          Axes = [| { Type = "x"; Scale = "x" }; { Type = "y"; Scale = "y" } |]
+          Marks =
+            [|
+              {
+                Type = "rect"
+                From = { Data = "table" }
+                Properties =
+                  [|
+                    ("enter",
+                      [|
+                        ("x", dict [|("scale", box "x"); ("field", box "data.x")|])
+                        ("width", dict [|("scale", box "x"); ("band", box true); ("offset", box -1)|])
+                        ("y", dict [|("scale", box "y"); ("field", box "data.y")|])
+                        ("y2", dict [|("scale", box "y"); ("value", box 0)|])
+                      |] |> dict |> box)
+                    ("update", [|("fill", dict [|("value", box "steelblue")|])|] |> dict |> box)
+                    ("hover", [|("fill", dict [|("value", box "red")|])|] |> dict |> box)
+                  |] |> dict
+              }
+            |]
         }
-      }
-    }
-  ]
-}"""
 
-let bar data = 
-    GlobalHost.ConnectionManager.GetHubContext<WebApp.ChartHub>()
-    |> sendSpec (data |> toBarJSON)
+(**
+ * Vega Core
+ *)
+
+/// Launch the default web browser and connect SignalR using the specified url.
+let connect url =
+    let disposable = WebApp.launch url
+    Console.WriteLine("Running chart hub on " + url)
+    // TODO: Use canopy?
+    Process.Start(url + "/index.html") |> ignore
+    disposable
+
+let private settings =
+    JsonSerializerSettings(ContractResolver = Serialization.CamelCasePropertyNamesContractResolver(), NullValueHandling = NullValueHandling.Ignore)
+
+let serialize spec =
+    JsonConvert.SerializeObject(spec, Formatting.Indented, settings)
+
+/// Send the spec to the Vega browser client via SignalR.
+let send (spec: Spec) : unit = 
+    let hub = GlobalHost.ConnectionManager.GetHubContext<WebApp.ChartHub>()
+    hub.Clients.All?parse (serialize spec)

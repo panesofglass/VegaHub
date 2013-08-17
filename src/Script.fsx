@@ -18,18 +18,19 @@ open System
 open VegaHub
 open VegaHub.Vega
 
-let disposable = WebApp.launch "http://localhost:8081"
+let disposable = Vega.connect "http://localhost:8081"
 
 // Simulate real-time updates
 let rand = Random(42)
 let rec loop data iter = async {
     let data' = Array.append data [| {x = data.Length; y = rand.Next(0, 100)} |]
-    data' |> Vega.bar
+    Vega.send { Templates.bar with Data = [| { Name = "table"; Values = data' } |] }
     do! Async.Sleep 100
     if iter = 0 then () else
     return! loop data' <| iter - 1
 }
 
+printfn "%s" (Vega.serialize Templates.bar)
 loop [||] 25 |> Async.RunSynchronously
 
 disposable.Dispose()

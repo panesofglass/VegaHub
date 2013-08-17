@@ -1,7 +1,6 @@
 ﻿module VegaHub.WebApp
 
 open System
-open System.Diagnostics
 open Owin
 open Microsoft.AspNet.SignalR
 open Microsoft.Owin.Hosting
@@ -22,7 +21,4 @@ let private hostFiles (app: IAppBuilder) =
 
 let launch (url: string) =
     let disposable = WebApp.Start(url, attachHub >> hostFiles >> ignore)
-    Console.WriteLine("Running chart hub on " + url)
-    // TODO: Use canopy?
-    Process.Start(url + "/index.html") |> ignore
     disposable

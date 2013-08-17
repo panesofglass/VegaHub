@@ -1,4 +1,4 @@
-﻿(function (document, $, undefined) {
+﻿(function (root, document, $, undefined) {
     "use strict";
 
     function parse(spec) {
@@ -15,6 +15,7 @@
         chartHub = $.connection.chartHub;
         if (chartHub) {
             chartHub.client.parse = function (spec) {
+                root.console.log(spec);
                 parse(JSON.parse(spec));
             };
 
@@ -25,4 +26,4 @@
             console.log('No hub found by the name of chartHub');
         }
     });
-})(document, jQuery);
+})(window, document, jQuery);
