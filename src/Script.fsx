@@ -22,15 +22,18 @@ let disposable = Vega.connect "http://localhost:8081"
 
 // Simulate real-time updates
 let rand = Random(42)
+//let spec = Templates.bar
+let spec = Templates.area
 let rec loop data iter = async {
-    let data' = Array.append data [| {x = data.Length; y = rand.Next(0, 100)} |]
-    Vega.send { Templates.bar with Data = [| { Name = "table"; Values = data' } |] }
+    let data' = Array.append data [| Point(X = data.Length, Y = rand.Next(0, 100)) |]
+    // Warning: mutation!
+    spec.Data <- [| Data(Name = "table", Values = data') |]
+    Vega.send spec
     do! Async.Sleep 100
     if iter = 0 then () else
     return! loop data' <| iter - 1
 }
 
-printfn "%s" (Vega.serialize Templates.bar)
 loop [||] 25 |> Async.RunSynchronously
 
 disposable.Dispose()
