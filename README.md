@@ -10,8 +10,8 @@ Proof-of-Concept
 
 ### Available charts
 
-* VegaHub.Templates.area
-* VegaHub.Templates.bar
+* [VegaHub.Templates.area](https://github.com/panesofglass/VegaHub/blob/master/src/Vega.fs#L132)
+* [VegaHub.Templates.bar](https://github.com/panesofglass/VegaHub/blob/master/src/Vega.fs#L197)
 
 Building
 --------
