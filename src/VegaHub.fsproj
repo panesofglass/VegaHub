@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>50151d7a-5e87-4535-8150-2f63a68d0040</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>VegaHub</RootNamespace>
     <AssemblyName>VegaHub</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -54,7 +54,7 @@
     <Content Include="Views\index.sshtml" />
     <Compile Include="Hosting.fs" />
     <Compile Include="Vega.fs" />
-    <None Include="Script.fsx" />
+    <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ImpromptuInterface">

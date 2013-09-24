@@ -1,4 +1,5 @@
-﻿#I """..\packages"""
+﻿#if INTERACTIVE
+#I """..\packages"""
 #r """Owin.1.0\lib\net40\Owin.dll"""
 #r """Microsoft.Owin.2.0.0-rc1\lib\net45\Microsoft.Owin.dll"""
 #r """Microsoft.Owin.Diagnostics.2.0.0-rc1\lib\net40\Microsoft.Owin.Diagnostics.dll"""
@@ -13,27 +14,42 @@
 #r """ImpromptuInterface.FSharp.1.2.13\lib\net40\ImpromptuInterface.FSharp.dll"""
 #load "Hosting.fs"
 #load "Vega.fs"
+#endif
 
 open System
 open VegaHub
 open VegaHub.Vega
 
-let disposable = Vega.connect "http://localhost:8081"
+let run () =
+    let disposable = Vega.connect "http://localhost:8081"
 
-// Simulate real-time updates
-let rand = Random(42)
-//let spec = Templates.bar
-let spec = Templates.area
-let rec loop data iter = async {
-    let data' = Array.append data [| Point(X = data.Length, Y = rand.Next(0, 100)) |]
-    // Warning: mutation!
-    spec.Data <- [| Data(Name = "table", Values = data') |]
-    Vega.send spec
-    do! Async.Sleep 100
-    if iter = 0 then () else
-    return! loop data' <| iter - 1
-}
+    // Simulate real-time updates
+    let rand = Random(42)
+    //let spec = Templates.bar
+    let spec = Templates.area
+    let rec loop data iter = async {
+        let data' = Array.append data [| Point(X = data.Length, Y = rand.Next(0, 100)) |]
+        // Warning: mutation!
+        spec.Data <- [| Data(Name = "table", Values = data') |]
+        Vega.send spec
+        do! Async.Sleep 100
+        if iter = 0 then () else
+        return! loop data' <| iter - 1
+    }
 
-loop [||] 25 |> Async.RunSynchronously
+    loop [||] 25 |> Async.RunSynchronously
 
+    disposable
+
+#if INTERACTIVE
+let disposable = run ()
 disposable.Dispose()
+#else
+[<EntryPoint>]
+let main args =
+    let disposable = run ()
+    Console.WriteLine("Press any key to stop.")
+    Console.ReadKey() |> ignore
+    disposable.Dispose()
+    0
+#endif

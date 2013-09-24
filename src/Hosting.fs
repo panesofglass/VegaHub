@@ -13,7 +13,7 @@ type ChartHub() =
 type Bootstrapper() =
     inherit DefaultNancyBootstrapper()
     override this.ConfigureConventions(nancyConventions: NancyConventions) =
-        nancyConventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("web", @"web"))
+        nancyConventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("scripts", @"scripts"))
         base.ConfigureConventions(nancyConventions)
     override this.RootPathProvider
         with get() =
