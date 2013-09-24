@@ -6,7 +6,7 @@ open System.Diagnostics
 open Microsoft.AspNet.SignalR
 open Newtonsoft.Json
 open ImpromptuInterface.FSharp
-open VegaHub
+open VegaHub.Hosting
 
 (**
  * Vega Grammar
@@ -263,13 +263,13 @@ module Templates =
 module Vega =
     /// Launch the default web browser and connect SignalR using the specified url.
     let connect url =
-        let disposable = WebApp.launch url
+        let disposable = Host.launch url
         Console.WriteLine("Running chart hub on " + url)
         // TODO: Use canopy?
-        Process.Start(url + "/index.html") |> ignore
+        Process.Start(url) |> ignore
         disposable
 
     /// Send the spec to the Vega browser client via SignalR.
     let send (spec: Spec) : unit = 
-        let hub = GlobalHost.ConnectionManager.GetHubContext<WebApp.ChartHub>()
+        let hub = GlobalHost.ConnectionManager.GetHubContext<ChartHub>()
         hub.Clients.All?parse (Serialization.serialize spec)
