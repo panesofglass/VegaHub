@@ -1,7 +1,7 @@
 /* jquery.signalR.core.js */
 /*global window:false */
 /*!
- * ASP.NET SignalR JavaScript Library v2.0.0-rtm1
+ * ASP.NET SignalR JavaScript Library v2.0.0-rc1
  * http://signalr.net/
  *
  * Copyright (C) Microsoft Corporation. All rights reserved.
@@ -2165,8 +2165,7 @@
 (function ($, window, undefined) {
     "use strict";
 
-    var eventNamespace = ".hubProxy",
-        signalR = $.signalR;
+    var eventNamespace = ".hubProxy";
 
     function makeEventName(event) {
         return event + eventNamespace;
@@ -2319,9 +2318,7 @@
                 data = { H: that.hubName, M: methodName, A: argValues, I: connection._.invocationCallbackId },
                 d = $.Deferred(),
                 callback = function (minResult) {
-                    var result = that._maximizeHubResponse(minResult),
-                        source,
-                        error;
+                    var result = that._maximizeHubResponse(minResult);
 
                     // Update the hub state
                     $.extend(that.state, result.State);
@@ -2331,13 +2328,7 @@
                         if (result.StackTrace) {
                             connection.log(result.Error + "\n" + result.StackTrace + ".");
                         }
-
-                        // result.ErrorData is only set if a HubException was thrown
-                        source = result.ErrorData ? "HubException" : "Exception";
-                        error = signalR._.error(result.Error, source);
-                        error.data = result.ErrorData;
-
-                        d.rejectWith(that, [error]);
+                        d.rejectWith(that, [result.Error]);
                     } else {
                         // Server invocation succeeded, resolve the deferred
                         d.resolveWith(that, [result.Result]);
@@ -2362,8 +2353,7 @@
                 Result: minHubResponse.R,
                 Id: minHubResponse.I,
                 Error: minHubResponse.E,
-                StackTrace: minHubResponse.T,
-                ErrorData: minHubResponse.D
+                StackTrace: minHubResponse.T
             };
         }
     };
@@ -2568,5 +2558,5 @@
 /*global window:false */
 /// <reference path="jquery.signalR.core.js" />
 (function ($, undefined) {
-    $.signalR.version = "2.0.0-rtm1";
+    $.signalR.version = "2.0.0-rc1";
 }(window.jQuery));
