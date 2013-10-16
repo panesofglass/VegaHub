@@ -10,8 +10,8 @@
 #r """Microsoft.AspNet.SignalR.Core.2.0.0-rtm1-130808-b140\lib\net45\Microsoft.AspNet.SignalR.Core.dll"""
 #r """ImpromptuInterface.6.2.2\lib\net40\ImpromptuInterface.dll"""
 #r """ImpromptuInterface.FSharp.1.2.13\lib\net40\ImpromptuInterface.FSharp.dll"""
-#load "WebApp.fs"
-#load "Vega.fs"
+#load "../src/WebApp.fs"
+#load "../src/Vega.fs"
 
 open System
 open VegaHub
