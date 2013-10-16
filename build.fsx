@@ -10,6 +10,7 @@ FB.Prepare {
                 !!"NuGet.Build"
                 !!"NuGet.Core"
                 !!"NUnit.Runners"
+                !!"FSharp.Formatting"
             ]
 }
 #endif
@@ -20,6 +21,8 @@ open System.IO
 open Fake 
 open Fake.AssemblyInfoFile
 open Fake.MSBuild
+open FSharp.Literate
+open FSharp.MetadataFormat
 
 (* properties *)
 let projectName = "VegaHub"
@@ -32,36 +35,42 @@ let homepage = "https://github.com/panesofglass/VegaHub"
 
 (* Directories *)
 let buildDir = __SOURCE_DIRECTORY__ @@ "build"
+let docsDir = __SOURCE_DIRECTORY__ @@ "docs"
+let referenceDir = docsDir @@ "reference"
 let deployDir = __SOURCE_DIRECTORY__ @@ "deploy"
 let packagesDir = __SOURCE_DIRECTORY__ @@ "packages"
 let sources = __SOURCE_DIRECTORY__ @@ "src"
 
 (* tools *)
 let nugetPath = ".nuget/NuGet.exe"
-
-let RestorePackageParamF = 
-  fun _ ->{ ToolPath = nugetPath
-            Sources = []
-            TimeOut = System.TimeSpan.FromMinutes 5.
-            OutputPath = "./packages" 
-           } :Fake.RestorePackageHelper.RestorePackageParams
-
-let RestorePackages2() = 
-  !! "./**/packages.config"
-  |> Seq.iter (RestorePackage RestorePackageParamF)
-RestorePackages2()
-
-(* files *)
-let appReferences =
-    !+ "src/**/*.fsproj" 
-        |> Scan
+let toolsPath = __SOURCE_DIRECTORY__ @@ "tools"
 
 (* Targets *)
+Target "RestorePackages" (fun _ ->
+
+    let RestorePackageParamF = 
+        fun _ ->{ ToolPath = nugetPath
+                  Sources = []
+                  TimeOut = System.TimeSpan.FromMinutes 5.
+                  OutputPath = "./packages" 
+                } :Fake.RestorePackageHelper.RestorePackageParams
+
+    let RestorePackages2() = 
+        !! "./**/packages.config"
+        |> Seq.iter (RestorePackage RestorePackageParamF)
+
+    RestorePackages2()
+)
+
 Target "Clean" (fun _ ->
-    CleanDirs [buildDir; deployDir]
+    CleanDirs [buildDir; docsDir; referenceDir; deployDir]
 )
 
 Target "BuildApp" (fun _ -> 
+    let appReferences =
+        !+ "src/**/*.fsproj" 
+            |> Scan
+
     if not isLocalBuild then
         [ Attribute.Version(version)
           Attribute.Title(projectName)
@@ -74,6 +83,13 @@ Target "BuildApp" (fun _ ->
         |> Log "AppBuild-Output: "
 )
 
+Target "GenerateDocs" (fun _ ->
+    let buildReference () =
+        MetadataFormat.Generate(buildDir @@ "VegaHub.dll", referenceDir, toolsPath @@ "reference")
+
+    buildReference()
+)
+
 Target "CopyLicense" (fun _ ->
     [ "LICENSE.txt" ] |> CopyTo buildDir
 )
@@ -83,7 +99,9 @@ Target "Default" DoNothing
 
 (* Build Order *)
 "Clean"
-    ==> "BuildApp" <=> "CopyLicense"
+    ==> "RestorePackages"
+    ==> "BuildApp"
+    ==> "GenerateDocs" <=> "CopyLicense"
     ==> "Deploy"
 
 "Default" <== ["Deploy"]
