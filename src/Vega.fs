@@ -22,9 +22,9 @@ type Point() =
     member val X : int = 0 with get,set
     member val Y : int = 0 with get,set
 
-type Data() =
+type Data<'T>() =
     member val Name   : string  = null with get,set
-    member val Values : Point[] = null with get,set
+    member val Values : 'T[] = null with get,set
 
 type ScaleDomain() =
     member val Data  : string = null with get,set
@@ -51,12 +51,12 @@ type Mark() =
     member val From : MarkFrom = MarkFrom() with get,set
     member val Properties : IDictionary<string, obj> = null with get,set // TODO: Create a typed wrapper with property accessors
 
-type Spec() =
+type Spec<'T>() =
     member val Name    : string = null with get,set
     member val Width   : int = 0 with get,set
     member val Height  : int = 0 with get,set
     member val Padding : Padding = Padding() with get,set
-    member val Data    : Data[] = null with get,set
+    member val Data    : Data<'T>[] = null with get,set
     member val Scales  : Scale[] = null with get,set
     member val Axes    : Axis[] = null with get,set
     member val Marks   : Mark[] = null with get,set
@@ -70,8 +70,8 @@ module internal Serialization =
     let private settings =
         JsonSerializerSettings(ContractResolver = Serialization.CamelCasePropertyNamesContractResolver(), NullValueHandling = NullValueHandling.Ignore)
 
-    let deserialize spec =
-        JsonConvert.DeserializeObject<Spec>(spec, settings)
+    let deserialize<'T> spec =
+        JsonConvert.DeserializeObject<Spec<'T>>(spec, settings)
 
     let serialize spec =
         JsonConvert.SerializeObject(spec, settings)
@@ -130,7 +130,7 @@ module Templates =
 //}"""
 
     let area =
-        Serialization.deserialize """{
+        Serialization.deserialize<Point> """{
   "width": 500,
   "height": 200,
   "padding": {"top": 10, "left": 30, "bottom": 30, "right": 10},
@@ -195,7 +195,7 @@ module Templates =
 }"""
         
     let bar =
-        Serialization.deserialize """{
+        Serialization.deserialize<Point> """{
   "width": 400,
   "height": 200,
   "padding": {"top": 10, "left": 30, "bottom": 30, "right": 10},
@@ -270,6 +270,6 @@ module Vega =
         disposable
 
     /// Send the spec to the Vega browser client via SignalR.
-    let send (spec: Spec) : unit = 
+    let send (spec: Spec<'T>) : unit = 
         let hub = GlobalHost.ConnectionManager.GetHubContext<WebApp.ChartHub>()
         hub.Clients.All?parse (Serialization.serialize spec)

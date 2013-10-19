@@ -25,7 +25,7 @@ let spec = Templates.area
 let rec loop data iter = async {
     let data' = Array.append data [| Point(X = data.Length, Y = rand.Next(0, 100)) |]
     // Warning: mutation!
-    spec.Data <- [| Data(Name = "table", Values = data') |]
+    spec.Data <- [| Data<Point>(Name = "table", Values = data') |]
     Vega.send spec
     do! Async.Sleep 100
     if iter = 0 then () else
