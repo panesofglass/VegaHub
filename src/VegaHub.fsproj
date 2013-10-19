@@ -52,7 +52,10 @@
     <Content Include="Scripts\d3.geo.projection.min.js" />
     <Content Include="Scripts\vega.js" />
     <Content Include="Scripts\app.js" />
-    <Compile Include="WebApp.fs" />
+    <Compile Include="Grammar.fs" />
+    <Compile Include="Templates\Arc.fs" />
+    <Compile Include="Templates\Area.fs" />
+    <Compile Include="Templates\Bar.fs" />
     <Compile Include="Vega.fs" />
   </ItemGroup>
   <ItemGroup>

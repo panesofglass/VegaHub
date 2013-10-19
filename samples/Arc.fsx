@@ -12,8 +12,7 @@
 #r """ImpromptuInterface.FSharp.1.2.13\lib\net40\ImpromptuInterface.FSharp.dll"""
 #load "../src/Grammar.fs"
 #load "../src/Vega.fs"
-#load "../src/Templates/Area.fs"
-#load "../src/Templates/Bar.fs"
+#load "../src/Templates/Arc.fs"
 
 open System
 open VegaHub
@@ -24,12 +23,12 @@ let disposable = Vega.connect "http://localhost:8081"
 
 // Simulate real-time updates
 let rand = Random(42)
-let spec = area
-//let spec = bar
+let spec = arc
 let rec loop data iter = async {
-    let data' = Array.append data [| Point(X = data.Length, Y = rand.Next(0, 100)) |]
+    let data' = Array.append data [| rand.Next(0, 100) |]
     // Warning: mutation!
-    spec.Data <- [| Data<Point>(Name = "table", Values = data') |]
+    // Don't replace the Data element.
+    spec.Data.[0].Values <- data'
     Vega.send spec
     do! Async.Sleep 100
     if iter = 0 then () else
