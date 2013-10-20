@@ -24,17 +24,16 @@ let disposable = Vega.connect "http://localhost:8081"
 // Simulate real-time updates
 let rand = Random(42)
 let spec = arc
-let rec loop data iter = async {
+let rec loop data iter =
     let data' = Array.append data [| rand.Next(0, 100) |]
     // Warning: mutation!
     // Don't replace the Data element.
     spec.Data.[0].Values <- data'
     Vega.send spec
-    do! Async.Sleep 100
+    Threading.Thread.Sleep 100
     if iter = 0 then () else
-    return! loop data' <| iter - 1
-}
+    loop data' <| iter - 1
 
-loop [||] 25 |> Async.RunSynchronously
+loop [||] 25
 
 disposable.Dispose()

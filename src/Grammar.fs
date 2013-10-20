@@ -13,9 +13,14 @@ type Padding() =
     member val Bottom : int = 0 with get,set
     member val Right  : int = 0 with get,set
 
+type Transform() =
+    member val Type  : string = null with get,set
+    member val Value : string = null with get,set
+
 type Data<'T>() =
-    member val Name   : string  = null with get,set
-    member val Values : 'T[] = null with get,set
+    member val Name      : string  = null with get,set
+    member val Values    : 'T[] = null with get,set
+    member val Transform : Transform[] = null with get,set
 
 type ScaleDomain() =
     member val Data  : string = null with get,set
@@ -66,7 +71,7 @@ type Point() =
  * Serialization helpers
  *)
 
-module internal Serialization =
+module Serialization =
     open Newtonsoft.Json
 
     let private settings =
