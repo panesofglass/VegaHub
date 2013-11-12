@@ -37,6 +37,6 @@ module Vega =
         disposable
 
     /// Send the spec to the Vega browser client via SignalR.
-    let send (spec: Spec<'TData, 'TRange>) : unit = 
+    let send (spec:string) : unit = 
         let hub = GlobalHost.ConnectionManager.GetHubContext<WebApp.ChartHub>()
-        hub.Clients.All?parse (Serialization.serialize spec)
+        hub.Clients.All?parse spec
