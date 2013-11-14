@@ -40,11 +40,13 @@ let sources = __SOURCE_DIRECTORY__ @@ "src"
 let nugetPath = ".nuget/NuGet.exe"
 
 let RestorePackageParamF = 
-  fun _ ->{ ToolPath = nugetPath
-            Sources = []
-            TimeOut = System.TimeSpan.FromMinutes 5.
-            OutputPath = "./packages" 
-           } :Fake.RestorePackageHelper.RestorePackageParams
+  fun (p: RestorePackageParams) ->
+    { p with
+        ToolPath = nugetPath
+        Sources = []
+        TimeOut = System.TimeSpan.FromMinutes 5.
+        OutputPath = "./packages" 
+    } :Fake.RestorePackageHelper.RestorePackageParams
 
 let RestorePackages2() = 
   !! "./**/packages.config"
@@ -52,9 +54,7 @@ let RestorePackages2() =
 RestorePackages2()
 
 (* files *)
-let appReferences =
-    !+ "src/**/*.fsproj" 
-        |> Scan
+let appReferences = !! "src/**/*.fsproj" 
 
 (* Targets *)
 Target "Clean" (fun _ ->
