@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{D303CDA2-7844-459F-9315-BB5326FEA477}"
 	ProjectSection(SolutionItems) = preProject
+		samples\FArchaeologist.fsx = samples\FArchaeologist.fsx
 		samples\Script.fsx = samples\Script.fsx
 	EndProjectSection
 EndProject
