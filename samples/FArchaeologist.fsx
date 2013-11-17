@@ -33,6 +33,71 @@ open VegaHub
 open VegaHub.Grammar
 open VegaHub.Basics
 
+
+// ----------------------------------------------------------------------------
+// Retrieve discussions for the specified tag
+// ----------------------------------------------------------------------------
+
+type Node = { Name: string; Group: int; Id: int }
+
+let run term count context =
+    let buzz = Twitter.Search.Tweets(context, term, count=count)
+
+    // Collect mentions by user
+    let discussions =
+        buzz.Statuses
+        |> Array.map (fun status ->
+            status.User.ScreenName, status.Entities.UserMentions |> Array.map (fun x -> x.ScreenName))
+
+
+    // ----------------------------------------------------------------------------
+    // Generate nodes for a force graph
+    // ----------------------------------------------------------------------------
+
+    let createNode index (name, count: int) =
+        { Name = name
+          Group = count/10 + 1
+          Id = index }
+
+    let nodes =
+        discussions
+        |> Array.map snd
+        |> Array.collect id
+        |> Seq.countBy id
+        |> Seq.mapi createNode
+        |> Seq.toList
+
+
+    // ----------------------------------------------------------------------------
+    // Generate the link relations for all nodes
+    // ----------------------------------------------------------------------------
+
+    let isMentioned (sender, _) =
+        nodes
+        |> List.exists (fun node -> node.Name = sender)
+
+    let findName name =
+        nodes
+        |> List.tryFind (fun d -> d.Name = name)
+
+    let createLink (sender, mentions) =
+        mentions
+        |> Array.choose (fun mention ->
+            findName sender |> Option.bind (fun source ->
+            findName mention |> Option.bind (fun target ->
+            Some(source.Id, target.Id, target.Group) )))
+
+    // Retrieve the links, filtering the results to only those with a mention.
+    let links =
+        discussions
+        |> Array.filter isMentioned
+        |> Array.map createLink
+        |> Array.collect id
+        |> Seq.distinct
+        |> Seq.toList
+
+    nodes, links
+
 // ----------------------------------------------------------------------------
 // Create user interface and connect to Twitter
 // ----------------------------------------------------------------------------
@@ -50,72 +115,10 @@ let connector = Twitter.Authenticate(key, secret, web.Navigate)
 // NOTE: Run all code up to this point. A window should appear. You can then
 // login to twitter and you'll get a pin code that you need to copy and
 // paste as an argument to the 'Connect' method below:
-let twitter = connector.Connect("3733136")
+let twitter = connector.Connect("7479199")
 
 // Login: 'fsharpd'
 // Password: 'fsharp123'
-
-
-// ----------------------------------------------------------------------------
-// Retrieve discussions for the specified tag
-// ----------------------------------------------------------------------------
-
-let buzz = Twitter.Search.Tweets(twitter, "MVPBuzz", count=100)
-
-// Collect mentions by user
-let discussions =
-    buzz.Statuses
-    |> Array.map (fun status ->
-        status.User.ScreenName, status.Entities.UserMentions |> Array.map (fun x -> x.ScreenName))
-
-
-// ----------------------------------------------------------------------------
-// Generate nodes for a force graph
-// ----------------------------------------------------------------------------
-
-type Node = { Name: string; Group: int; Id: int }
-
-let createNode index (name, count: int) =
-    { Name = name
-      Group = count/10 + 1
-      Id = index }
-
-let nodes =
-    discussions
-    |> Array.map snd
-    |> Array.collect id
-    |> Seq.countBy id
-    |> Seq.mapi createNode
-    |> Seq.toList
-
-
-// ----------------------------------------------------------------------------
-// Generate the link relations for all nodes
-// ----------------------------------------------------------------------------
-
-let isMentioned (sender, _) =
-    nodes
-    |> List.exists (fun node -> node.Name = sender)
-
-let findName name =
-    nodes
-    |> List.tryFind (fun d -> d.Name = name)
-
-let createLink (sender, mentions) =
-    mentions
-    |> Array.choose (fun mention ->
-        findName sender |> Option.bind (fun source ->
-        findName mention |> Option.bind (fun target ->
-        Some(source.Id, target.Id, target.Group) )))
-
-// Retrieve the links, filtering the results to only those with a mention.
-let links =
-    discussions
-    |> Array.filter isMentioned
-    |> Array.map createLink
-    |> Array.collect id
-    |> Seq.distinct
-    |> Seq.toList
 
 
 // ----------------------------------------------------------------------------
@@ -124,9 +127,17 @@ let links =
 
 let disposable = Vega.connect "http://localhost:8081"
 
+let nodes, links = run "MVPBuzz" 100 twitter
 Basics.force nodes (fun (n: Node) -> n.Name)
              links ((fun (s,_,_) -> float s), (fun (_,t,_) -> float t), (fun (_,_,v) -> float v))
-             (1.,1.,1)
-             |> Vega.send
+             (70.,-100.,1000)
+|> Vega.send
+//while true do
+//    let nodes, links = run "MVPBuzz" 100 twitter
+//    Basics.force nodes (fun (n: Node) -> n.Name)
+//                 links ((fun (s,_,_) -> float s), (fun (_,t,_) -> float t), (fun (_,_,v) -> float v))
+//                 (70.,-100.,1000)
+//                 |> Vega.send
+//    System.Threading.Thread.Sleep 30000
 
 disposable.Dispose()
