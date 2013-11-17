@@ -16,6 +16,11 @@ module Basics =
         let yScale = ("Y", Height, ys)
         let colorScale = ("Color", Color10, cs)
 
+        let xStartZero = 
+          let xMin = Seq.map fx dataset |> Seq.min
+          let xMax = Seq.map fx dataset |> Seq.max
+          (xMin * 2.0) < xMax
+
         let axes = { XAxis = xScale, None; YAxis = yScale, None}
 
         let point = 
@@ -32,7 +37,7 @@ module Basics =
             [   NVal("width",400.);
                 NVal("height",400.);
                 writeData dataset [xs;ys;cs;ss];
-                List ("scales", [ writeScale xScale; writeScale yScale; writeScale colorScale; ]);
+                List ("scales", [ writeScaleStartZero xStartZero xScale; writeScale yScale; writeScale colorScale; ]);
                 writeAxes axes;
                 List ("marks", [ render mark; ])
             ]

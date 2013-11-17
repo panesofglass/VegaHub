@@ -71,7 +71,7 @@ module Grammar =
         let (name,_,_) = scale
         name
 
-    let writeScale (scale:Scale<'a>) = 
+    let writeScaleStartZero startZero (scale:Scale<'a>) = 
         let name, range, domain = scale
         let range =
             match range with
@@ -84,10 +84,12 @@ module Grammar =
             | Numeric(n,_)     -> Nested("domain",[Val("data","table");Val("field","data."+n)]), Val("type","linear")
             | Categorical(n,_) -> Nested("domain",[Val("data","table");Val("field","data."+n)]), Val("type","ordinal")
         [   Val("name",name); 
-            BVal("zero",false);
+            BVal("zero",startZero);
             featType;
             range; 
             domain; ]
+
+    let writeScale (scale:Scale<'a>) = writeScaleStartZero true scale
 
     type AxisValues = string list
     type Axes<'a> = { XAxis: Scale<'a> * AxisValues option; YAxis: Scale<'a> * AxisValues option} 
