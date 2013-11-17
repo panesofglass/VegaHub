@@ -11,12 +11,12 @@
 #r """Microsoft.AspNet.SignalR.Core.2.0.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll"""
 #r """ImpromptuInterface.6.2.2\lib\net40\ImpromptuInterface.dll"""
 #r """ImpromptuInterface.FSharp.1.2.13\lib\net40\ImpromptuInterface.FSharp.dll"""
+#r """FSharp.Data.1.1.10\lib\net40\FSharp.Data.dll"""
 
 // Reference VegaHub
 #r """..\src\bin\Debug\VegaHub.dll"""
 
 // Reference Twitter.API
-#r """references\FSharp.Data.dll"""
 #r """references\Twitter.API.dll"""
 #load "references/GuiExtensions.fs"
 
@@ -115,7 +115,7 @@ let connector = Twitter.Authenticate(key, secret, web.Navigate)
 // NOTE: Run all code up to this point. A window should appear. You can then
 // login to twitter and you'll get a pin code that you need to copy and
 // paste as an argument to the 'Connect' method below:
-let twitter = connector.Connect("7479199")
+let twitter = connector.Connect("7245970")
 
 // Login: 'fsharpd'
 // Password: 'fsharp123'
@@ -127,17 +127,15 @@ let twitter = connector.Connect("7479199")
 
 let disposable = Vega.connect "http://localhost:8081"
 
-let nodes, links = run "MVPBuzz" 100 twitter
-Basics.force nodes (fun (n: Node) -> n.Name)
-             links ((fun (s,_,_) -> float s), (fun (_,t,_) -> float t), (fun (_,_,v) -> float v))
-             (70.,-100.,1000)
-|> Vega.send
-//while true do
-//    let nodes, links = run "MVPBuzz" 100 twitter
-//    Basics.force nodes (fun (n: Node) -> n.Name)
-//                 links ((fun (s,_,_) -> float s), (fun (_,t,_) -> float t), (fun (_,_,v) -> float v))
-//                 (70.,-100.,1000)
-//                 |> Vega.send
-//    System.Threading.Thread.Sleep 30000
+let shouldRun = ref true
+while !shouldRun do
+    let nodes, links = run "MVPBuzz" 100 twitter
+    Basics.force nodes (fun (n: Node) -> n.Name)
+                 links ((fun (s,_,_) -> float s), (fun (_,t,_) -> float t), (fun (_,_,v) -> float v))
+                 (70., -100., 1000)
+                 |> Vega.send
+    System.Threading.Thread.Sleep 30000
+
+shouldRun := false
 
 disposable.Dispose()

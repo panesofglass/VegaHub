@@ -1,9 +1,10 @@
-﻿(function (root, document, $, undefined) {
+﻿(function (root, document, $, d3, vg, undefined) {
     "use strict";
 
     function parse(spec) {
         vg.parse.spec(spec, function (chart) {
-            chart({ el: "#vis" }).update();
+            //d3.select('#vis').selectAll('*').remove();
+            chart({ el: '#vis' }).update();
         });
     }
 
@@ -26,4 +27,4 @@
             console.log('No hub found by the name of chartHub');
         }
     });
-})(window, document, jQuery);
+})(window, document, jQuery, d3, vg);
