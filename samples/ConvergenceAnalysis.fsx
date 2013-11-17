@@ -319,8 +319,8 @@ let handler ((theta:DenseVector), (cost:float)) =
         [  
            for ad in training -> clampCtr ad, pred ad, "Train", size ad
            for ad in validation -> clampCtr ad, pred ad, "Valid", size ad ]
-    printfn "Updated values"
-    printfn "Cost: %f" cost
+//    printfn "Updated values"
+//    printfn "Cost: %f" cost
     VegaHub.Basics.scatterplot eval 
                                ((fun (x,_,_,_) -> x), 
                                (fun (_,y,_,_) -> y), 
@@ -329,6 +329,6 @@ let handler ((theta:DenseVector), (cost:float)) =
     |> Vega.send
 
 let obsWeightsStrat = equalWeights // equalWeights // impressionsWeights // 
-let the, pred, toks = Analyze training tokenizer obsWeightsStrat 1.0 0. 1000 handler
+let the, pred, toks = Analyze training tokenizer obsWeightsStrat 1.0 0. 100 handler
 
 disposable.Dispose()

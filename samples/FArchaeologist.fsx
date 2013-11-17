@@ -115,7 +115,7 @@ let connector = Twitter.Authenticate(key, secret, web.Navigate)
 // NOTE: Run all code up to this point. A window should appear. You can then
 // login to twitter and you'll get a pin code that you need to copy and
 // paste as an argument to the 'Connect' method below:
-let twitter = connector.Connect("7245970")
+let twitter = connector.Connect("6259402")
 
 // Login: 'fsharpd'
 // Password: 'fsharp123'
@@ -134,7 +134,7 @@ while !shouldRun do
                  links ((fun (s,_,_) -> float s), (fun (_,t,_) -> float t), (fun (_,_,v) -> float v))
                  (70., -100., 1000)
                  |> Vega.send
-    System.Threading.Thread.Sleep 30000
+    System.Threading.Thread.Sleep 60000
 
 shouldRun := false
 
