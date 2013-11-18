@@ -45,9 +45,10 @@ let disposable = Vega.connect "http://localhost:8081"
 
 VegaHub.Basics.scatterplot (data |> Array.toList)
                 ((fun x -> x.PetalWidth), 
-                (fun x -> x.SepalLength), 
+                (fun x -> x.PetalWidth), 
                 (fun x -> x.Class),
                 (fun x -> 200.))
+|> Vega.send
 
 // Clustering Algorithm
 
@@ -105,7 +106,7 @@ let handleUpdate (update: (Observation * int) []) =
         (fun (x,y) -> if x.Class = "Centroid" then 300. else 100.))
     |> Vega.send
 
-let test = clusterize data distance reducer 2 handleUpdate
+let test = clusterize data distance reducer 3 handleUpdate
 
 // Shorter, with Type Providers
 

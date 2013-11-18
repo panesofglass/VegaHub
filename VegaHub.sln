@@ -15,8 +15,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{D303
 	ProjectSection(SolutionItems) = preProject
 		samples\ConvergenceAnalysis.fsx = samples\ConvergenceAnalysis.fsx
 		samples\FArchaeologist.fsx = samples\FArchaeologist.fsx
+		samples\iris.data = samples\iris.data
 		samples\Scatterplot.fsx = samples\Scatterplot.fsx
 		samples\Script.fsx = samples\Script.fsx
+		samples\ws.csv = samples\ws.csv
 	EndProjectSection
 EndProject
 Global

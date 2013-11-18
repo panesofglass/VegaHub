@@ -108,14 +108,14 @@ let web = new WebBrowser(Dock = DockStyle.Fill)
 frm.Controls.Add(web)
 frm.Controls.Add(btn)
 
-let key = "nJAY7iOARgF8dP4xXx6ZTA"
-let secret = "UJmrefLlPUaRp8OGtosXo04wAyfzgLZGcqOVC88"
+let key = "Your Twitter API key"
+let secret = "Your Twitter API secret"
 let connector = Twitter.Authenticate(key, secret, web.Navigate)
 
 // NOTE: Run all code up to this point. A window should appear. You can then
 // login to twitter and you'll get a pin code that you need to copy and
 // paste as an argument to the 'Connect' method below:
-let twitter = connector.Connect("6259402")
+let twitter = connector.Connect("Your pin code")
 
 // Login: 'fsharpd'
 // Password: 'fsharp123'
@@ -129,7 +129,7 @@ let disposable = Vega.connect "http://localhost:8081"
 
 let shouldRun = ref true
 while !shouldRun do
-    let nodes, links = run "MVPBuzz" 100 twitter
+    let nodes, links = run "MVPSummit" 100 twitter
     Basics.force nodes (fun (n: Node) -> n.Name)
                  links ((fun (s,_,_) -> float s), (fun (_,t,_) -> float t), (fun (_,_,v) -> float v))
                  (70., -100., 1000)
