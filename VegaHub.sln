@@ -10,17 +10,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{D303CDA2-7844-459F-9315-BB5326FEA477}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VegaHub", "src\VegaHub.fsproj", "{50151D7A-5E87-4535-8150-2F63A68D0040}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BEF9EEDC-1681-4B30-B80E-6CED28FA14B4}"
 	ProjectSection(SolutionItems) = preProject
-		samples\ConvergenceAnalysis.fsx = samples\ConvergenceAnalysis.fsx
-		samples\FArchaeologist.fsx = samples\FArchaeologist.fsx
-		samples\iris.data = samples\iris.data
-		samples\Scatterplot.fsx = samples\Scatterplot.fsx
-		samples\Script.fsx = samples\Script.fsx
-		samples\ws.csv = samples\ws.csv
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VegaHub", "src\VegaHub.fsproj", "{50151D7A-5E87-4535-8150-2F63A68D0040}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VegaHub.Samples", "samples\VegaHub.Samples\VegaHub.Samples.fsproj", "{B636325E-D005-4EC7-97FB-01467324B1A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +31,10 @@ Global
 		{50151D7A-5E87-4535-8150-2F63A68D0040}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50151D7A-5E87-4535-8150-2F63A68D0040}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50151D7A-5E87-4535-8150-2F63A68D0040}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B636325E-D005-4EC7-97FB-01467324B1A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B636325E-D005-4EC7-97FB-01467324B1A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B636325E-D005-4EC7-97FB-01467324B1A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B636325E-D005-4EC7-97FB-01467324B1A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

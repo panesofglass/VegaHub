@@ -1,5 +1,5 @@
 ﻿// Include dependencies
-#I """..\packages"""
+#I """..\..\packages"""
 #r """Owin.1.0\lib\net40\Owin.dll"""
 #r """Microsoft.Owin.2.1.0-rc1\lib\net45\Microsoft.Owin.dll"""
 #r """Microsoft.Owin.FileSystems.2.1.0-rc1\lib\net40\Microsoft.Owin.FileSystems.dll"""
@@ -13,7 +13,7 @@
 #r """ImpromptuInterface.FSharp.1.2.13\lib\net40\ImpromptuInterface.FSharp.dll"""
 
 // Reference VegaHub
-#r """..\src\bin\Debug\VegaHub.dll"""
+#r """..\..\src\bin\Debug\VegaHub.dll"""
 
 open System
 open VegaHub

@@ -45,7 +45,8 @@ type Vega =
     static member Connect(url, filePath, ?page) =
         let page = defaultArg page "/index.html"
         let disposable = WebApp.launch url filePath
-        Console.WriteLine("Running chart hub on " + url)
+        printfn "Running chart hub on %s" url
+        printfn "Using %s from %s" page filePath
         // TODO: Use canopy?
         Process.Start(url + page) |> ignore
         disposable
