@@ -21,8 +21,7 @@ let mail = "ryan.riley@panesofglass.org"
 let homepage = "https://github.com/panesofglass/VegaHub"
 
 (* Directories *)
-let buildDir = __SOURCE_DIRECTORY__ @@ "build"
-let deployDir = __SOURCE_DIRECTORY__ @@ "deploy"
+let buildDir = __SOURCE_DIRECTORY__ @@ "bin"
 let packagesDir = __SOURCE_DIRECTORY__ @@ "packages"
 let sources = __SOURCE_DIRECTORY__ @@ "src"
 
@@ -48,7 +47,7 @@ let appReferences = !! "src/**/*.fsproj"
 
 (* Targets *)
 Target "Clean" (fun _ ->
-    CleanDirs [buildDir; deployDir]
+    CleanDirs [buildDir]
 )
 
 Target "BuildApp" (fun _ -> 
@@ -58,7 +57,7 @@ Target "BuildApp" (fun _ ->
           Attribute.Description(projectDescription)
           Attribute.Guid("50151d7a-5e87-4535-8150-2f63a68d0040")
         ]
-        |> CreateFSharpAssemblyInfo "src/AssemblyInfo.fs"
+        |> CreateFSharpAssemblyInfo "src/VegaHub/AssemblyInfo.fs"
 
     MSBuildRelease buildDir "Build" appReferences
         |> Log "AppBuild-Output: "
@@ -80,4 +79,3 @@ Target "Default" DoNothing
 
 // start build
 RunTargetOrDefault "Default"
-

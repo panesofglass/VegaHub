@@ -1,20 +1,22 @@
 ﻿// Include dependencies
-#I """..\..\packages"""
-#r """Owin.1.0\lib\net40\Owin.dll"""
-#r """Microsoft.Owin.2.1.0-rc1\lib\net45\Microsoft.Owin.dll"""
-#r """Microsoft.Owin.FileSystems.2.1.0-rc1\lib\net40\Microsoft.Owin.FileSystems.dll"""
-#r """Microsoft.Owin.Hosting.2.1.0-rc1\lib\net45\Microsoft.Owin.Hosting.dll"""
-#r """Microsoft.Owin.Security.2.1.0-rc1\lib\net45\Microsoft.Owin.Security.dll"""
-#r """Microsoft.Owin.StaticFiles.2.1.0-rc1\lib\net40\Microsoft.Owin.StaticFiles.dll"""
-#r """Microsoft.Owin.Host.HttpListener.2.1.0-rc1\lib\net45\Microsoft.Owin.Host.HttpListener.dll"""
-#r """Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll"""
-#r """Microsoft.AspNet.SignalR.Core.2.0.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll"""
-#r """ImpromptuInterface.6.2.2\lib\net40\ImpromptuInterface.dll"""
-#r """ImpromptuInterface.FSharp.1.2.13\lib\net40\ImpromptuInterface.FSharp.dll"""
-#r """FSharp.Data.1.1.10\lib\net40\FSharp.Data.dll"""
+#I """..\..\bin"""
+#r "Owin.dll"
+#r "Microsoft.Owin.dll"
+#r "Microsoft.Owin.FileSystems.dll"
+#r "Microsoft.Owin.Hosting.dll"
+#r "Microsoft.Owin.Security.dll"
+#r "Microsoft.Owin.StaticFiles.dll"
+#r "Microsoft.Owin.Host.HttpListener.dll"
+#r "Newtonsoft.Json.dll"
+#r "Microsoft.AspNet.SignalR.Core.dll"
+#r "ImpromptuInterface.dll"
+#r "ImpromptuInterface.FSharp.dll"
 
 // Reference VegaHub
-#r """..\..\src\bin\Debug\VegaHub.dll"""
+#r "VegaHub.dll"
+
+// Reference FSharp.Data
+#r """..\..\packages\FSharp.Data.1.1.10\lib\net40\FSharp.Data.dll"""
 
 open System
 open System.IO
