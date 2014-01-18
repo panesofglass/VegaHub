@@ -8,6 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build.fsx = build.fsx
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
+		RELEASE_NOTES.md = RELEASE_NOTES.md
+		nuget\VegaHub.nuspec = nuget\VegaHub.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BEF9EEDC-1681-4B30-B80E-6CED28FA14B4}"
@@ -20,6 +22,32 @@ EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VegaHub.Samples", "samples\VegaHub.Samples\VegaHub.Samples.fsproj", "{B636325E-D005-4EC7-97FB-01467324B1A4}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VegaHub", "src\VegaHub\VegaHub.fsproj", "{50151D7A-5E87-4535-8150-2F63A68D0040}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{871A40E0-2E68-4CCB-AA10-A0AD41A2333C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{BBB7B635-6C07-4D9F-8F57-D6B8E4EAC168}"
+	ProjectSection(SolutionItems) = preProject
+		docs\content\index.fsx = docs\content\index.fsx
+		docs\content\tutorial.fsx = docs\content\tutorial.fsx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{849644DE-0018-40A5-B2B4-DF8D8014139A}"
+	ProjectSection(SolutionItems) = preProject
+		docs\tools\generate.fsx = docs\tools\generate.fsx
+		docs\tools\packages.config = docs\tools\packages.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "files", "files", "{A16FA542-2BEE-4456-B15A-2CB7637ED165}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{4E080B8D-8F28-44C9-BA11-997FD3ADEE50}"
+	ProjectSection(SolutionItems) = preProject
+		docs\files\img\logo.png = docs\files\img\logo.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{A48B9367-E07A-4725-95D8-9AFA8F721C59}"
+	ProjectSection(SolutionItems) = preProject
+		docs\tools\templates\template.cshtml = docs\tools\templates\template.cshtml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,5 +66,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BBB7B635-6C07-4D9F-8F57-D6B8E4EAC168} = {871A40E0-2E68-4CCB-AA10-A0AD41A2333C}
+		{849644DE-0018-40A5-B2B4-DF8D8014139A} = {871A40E0-2E68-4CCB-AA10-A0AD41A2333C}
+		{A16FA542-2BEE-4456-B15A-2CB7637ED165} = {871A40E0-2E68-4CCB-AA10-A0AD41A2333C}
+		{A48B9367-E07A-4725-95D8-9AFA8F721C59} = {849644DE-0018-40A5-B2B4-DF8D8014139A}
+		{4E080B8D-8F28-44C9-BA11-997FD3ADEE50} = {A16FA542-2BEE-4456-B15A-2CB7637ED165}
 	EndGlobalSection
 EndGlobal
