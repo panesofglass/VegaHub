@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Basics - VegaHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Ryan Riley">
+
+    <script src="http://code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="http://code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="/VegaHub/content/style.css" />
+    <script type="text/javascript" src="/VegaHub/content/tips.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="http://fsharp.org">fsharp.org</a></li>
+          <li><a href="http://github.com/panesofglass/VegaHub">github page</a></li>
+        </ul>
+        <h3 class="muted"><a href="/VegaHub/index.html">VegaHub</a></h3>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="span9" id="main">
+          
+
+
+
+<h1>Basics</h1>
+<div class="xmldoc">
+</div>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Function or value</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '1', 1)" onmouseover="showTip(event, '1', 1)">
+            bar dataset (fx, fy)
+          </code>
+          <div class="tip" id="1">
+            <strong>Signature:</strong>dataset:&#39;?4916 list -&gt; (fx:Cat&lt;&#39;?4916&gt; * fy:Num&lt;&#39;?4916&gt;) -&gt; string<br />
+                          <strong>Type parameters:</strong> '?4916          </div>
+        </td>
+        <td class="xmldoc">
+        
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '2', 2)" onmouseover="showTip(event, '2', 2)">
+            colorBar dataset (fx, fy, fc)
+          </code>
+          <div class="tip" id="2">
+            <strong>Signature:</strong>dataset:&#39;?4918 list -&gt; (fx:Cat&lt;&#39;?4918&gt; * fy:Num&lt;&#39;?4918&gt; * fc:Cat&lt;&#39;?4918&gt;) -&gt; string<br />
+                          <strong>Type parameters:</strong> '?4918          </div>
+        </td>
+        <td class="xmldoc">
+        
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '3', 3)" onmouseover="showTip(event, '3', 3)">
+            force (...)
+          </code>
+          <div class="tip" id="3">
+            <strong>Signature:</strong>nodes:&#39;?4920 list -&gt; ns:Cat&lt;&#39;?4920&gt; -&gt; edges:&#39;?4921 list -&gt; (src:Num&lt;&#39;?4921&gt; * tgt:Num&lt;&#39;?4921&gt; * v:Num&lt;&#39;?4921&gt;) -&gt; (float * float * int) -&gt; string<br />
+                          <strong>Type parameters:</strong> '?4920, '?4921          </div>
+        </td>
+        <td class="xmldoc">
+        
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '4', 4)" onmouseover="showTip(event, '4', 4)">
+            scatterplot dataset (fx, fy, fc, fs)
+          </code>
+          <div class="tip" id="4">
+            <strong>Signature:</strong>dataset:&#39;?4914 list -&gt; (fx:Num&lt;&#39;?4914&gt; * fy:Num&lt;&#39;?4914&gt; * fc:Cat&lt;&#39;?4914&gt; * fs:Num&lt;&#39;?4914&gt;) -&gt; string<br />
+                          <strong>Type parameters:</strong> '?4914          </div>
+        </td>
+        <td class="xmldoc">
+        
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+        </div>
+        <div class="span3">
+          <ul class="nav nav-list" id="menu">
+            <li class="nav-header">VegaHub</li>
+            <li><a href="/VegaHub/index.html">Home page</a></li>
+            <li class="divider"></li>
+            <li><a href="http://nuget.com/packages/VegaHub">Get Library via NuGet</a></li>
+            <li><a href="http://github.com/panesofglass/VegaHub">Source Code on GitHub</a></li>
+            <li><a href="http://github.com/panesofglass/VegaHub/blob/master/LICENSE.txt">License</a></li>
+            <li><a href="http://github.com/panesofglass/VegaHub/blob/master/RELEASE_NOTES.md">Release Notes</a></li>
+            
+            <li class="nav-header">Getting started</li>
+            <li><a href="/VegaHub/tutorial.html">Sample tutorial</a></li>
+
+            <li class="nav-header">Documentation</li>
+            <li><a href="/VegaHub/reference/index.html">API Reference</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <a href="http://github.com/panesofglass/VegaHub"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+  </body>
+  </html>
