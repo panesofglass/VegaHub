@@ -6,6 +6,7 @@ module Json =
     and Prop =
     | Val of (string * string) // string property
     | NVal of (string * float) // numeric property
+    | BVal of (string * bool) // bool property
     | Nested of (string * Obj) // object property
     | List of (string * Obj list) // list of objects
     | VList of (string * string list) // raw list of strings
@@ -19,6 +20,7 @@ module Json =
         match prop with
         | Val(key,value)  -> sprintf "\"%s\":\"%s\"" key value
         | NVal(key,value) -> sprintf "\"%s\":%f" key value
+        | BVal(key,value)  -> sprintf "\"%s\":%s" key (value.ToString().ToLower())
         | Nested(key,obj) -> sprintf "\"%s\":%s" key (writeObj obj) 
         | List(key,list)  -> sprintf "\"%s\":[%s]" key (list |> List.map writeObj |> String.concat ",")
         | VList(key,list) -> sprintf "\"%s\":[%s]" key (list |> List.map (fun x -> sprintf "\"%s\"" x) |> String.concat ",")
@@ -69,7 +71,7 @@ module Grammar =
         let (name,_,_) = scale
         name
 
-    let writeScale (scale:Scale<'a>) = 
+    let writeScaleStartZero startZero (scale:Scale<'a>) = 
         let name, range, domain = scale
         let range =
             match range with
@@ -82,9 +84,12 @@ module Grammar =
             | Numeric(n,_)     -> Nested("domain",[Val("data","table");Val("field","data."+n)]), Val("type","linear")
             | Categorical(n,_) -> Nested("domain",[Val("data","table");Val("field","data."+n)]), Val("type","ordinal")
         [   Val("name",name); 
+            BVal("zero",startZero);
             featType;
             range; 
             domain; ]
+
+    let writeScale (scale:Scale<'a>) = writeScaleStartZero true scale
 
     type AxisValues = string list
     type Axes<'a> = { XAxis: Scale<'a> * AxisValues option; YAxis: Scale<'a> * AxisValues option} 
