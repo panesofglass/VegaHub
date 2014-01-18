@@ -1,19 +1,20 @@
-﻿#I """..\packages"""
+﻿// Include dependencies
+#I """..\packages"""
 #r """Owin.1.0\lib\net40\Owin.dll"""
-#r """Microsoft.Owin.2.0.1\lib\net45\Microsoft.Owin.dll"""
-#r """Microsoft.Owin.FileSystems.0.27.0-pre-21113-700-rel\lib\net40\Microsoft.Owin.FileSystems.dll"""
-#r """Microsoft.Owin.Hosting.2.0.1\lib\net45\Microsoft.Owin.Hosting.dll"""
-#r """Microsoft.Owin.Security.2.0.1\lib\net45\Microsoft.Owin.Security.dll"""
-#r """Microsoft.Owin.StaticFiles.0.27.0-pre-21113-700-rel\lib\net40\Microsoft.Owin.StaticFiles.dll"""
-#r """Microsoft.Owin.Host.HttpListener.2.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll"""
+#r """Microsoft.Owin.2.1.0-rc1\lib\net45\Microsoft.Owin.dll"""
+#r """Microsoft.Owin.FileSystems.2.1.0-rc1\lib\net40\Microsoft.Owin.FileSystems.dll"""
+#r """Microsoft.Owin.Hosting.2.1.0-rc1\lib\net45\Microsoft.Owin.Hosting.dll"""
+#r """Microsoft.Owin.Security.2.1.0-rc1\lib\net45\Microsoft.Owin.Security.dll"""
+#r """Microsoft.Owin.StaticFiles.2.1.0-rc1\lib\net40\Microsoft.Owin.StaticFiles.dll"""
+#r """Microsoft.Owin.Host.HttpListener.2.1.0-rc1\lib\net45\Microsoft.Owin.Host.HttpListener.dll"""
 #r """Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll"""
-#r """Microsoft.AspNet.SignalR.Core.2.0.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll"""
+#r """Microsoft.AspNet.SignalR.Core.2.0.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll"""
 #r """ImpromptuInterface.6.2.2\lib\net40\ImpromptuInterface.dll"""
 #r """ImpromptuInterface.FSharp.1.2.13\lib\net40\ImpromptuInterface.FSharp.dll"""
 #r """FSharp.Data.1.1.10\lib\net40\FSharp.Data.dll"""
-#load "../src/Grammar.fs"
-#load "../src/Basics.fs"
-#load "../src/Vega.fs"
+
+// Reference VegaHub
+#r """..\src\bin\Debug\VegaHub.dll"""
 
 open System
 open System.IO
@@ -41,7 +42,7 @@ let data =
             PetalWidth = line.[3] |> float;
             Class = line.[4]; })
 
-let disposable = Vega.connect "http://localhost:8081"
+let disposable = Vega.connect "http://localhost:8081" __SOURCE_DIRECTORY__
 
 VegaHub.Basics.scatterplot (data |> Array.toList)
                 ((fun x -> x.PetalWidth), 
