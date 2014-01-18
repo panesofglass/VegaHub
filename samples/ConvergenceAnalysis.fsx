@@ -311,7 +311,7 @@ let createpredictor (data:Ad[]) (tokenizer:AdTokenizer) (theta:DenseVector) =
                 if vocab.Contains t then yield 1. else yield 0. |]
         linear (DenseVector(vector)) theta |> fromModel
 
-let disposable = Vega.connect "http://localhost:8081" __SOURCE_DIRECTORY__
+let disposable = Vega.Connect("http://localhost:8081", __SOURCE_DIRECTORY__)
 
 let handler ((theta:DenseVector), (cost:float)) =
     let pred = createpredictor training tokenizer theta
@@ -328,7 +328,7 @@ let handler ((theta:DenseVector), (cost:float)) =
                                (fun (_,y,_,_) -> y), 
                                (fun (_,_,c,_) -> c), 
                                (fun (_,_,_,s) -> s))
-    |> Vega.send
+    |> Vega.Send
 
 let obsWeightsStrat = equalWeights // equalWeights // impressionsWeights // 
 let the, pred, toks = Analyze training tokenizer obsWeightsStrat 1.0 0. 100 handler
