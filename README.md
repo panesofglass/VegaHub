@@ -10,42 +10,39 @@ Proof-of-Concept
 
 ### Available charts
 
-* [VegaHub.Templates.area](https://github.com/panesofglass/VegaHub/blob/master/src/Vega.fs#L132)
-* [VegaHub.Templates.bar](https://github.com/panesofglass/VegaHub/blob/master/src/Vega.fs#L197)
+* bar
+* colorBar
+* force
+* scatterplot
 
 Building
 --------
 
-VegaHub relies on several packages in the ASP.NET Web Stack nightly builds. You will need to add a reference to the MyGet feed in order to successfully build and run the script.
-
-Add this to your NuGet package sources by going to Tools -> Library Package Manager -> Package Manager Settings and creating a new package source for http://www.myget.org/f/aspnetwebstacknightlyrelease/
-
-Once you add this package source, you should build from the command line using build.bat in order to download NuGet.exe.
+Run build.bat to download NuGet.exe and build the solution. You can find samples in the samples folder.
 
 ``` fsharp
-#load "WebApp.fs"
-#load "Vega.fs"
+#r "..\build\VegaHub.dll"
 
 open System
 open VegaHub
+open VegaHub.Grammar
+open VegaHub.Basics
 
-let disposable = Vega.connect "http://localhost:8081"
+let disposable = Vega.connect "http://localhost:8081" __SOURCE_DIRECTORY__
 
 // Simulate real-time updates
 let rand = Random(42)
-//let spec = Templates.bar
-let spec = Templates.area
+
 let rec loop data iter = async {
-    let data' = Array.append data [| Point(X = data.Length, Y = rand.Next(0, 100)) |]
-    // Warning: mutation!
-    spec.Data <- [| Data(Name = "table", Values = data') |]
-    Vega.send spec
+    let data' = List.append data [ (data.Length, rand.Next(0, 100)) ]
+    // Warning: mutation!   
+    Basics.bar data' ((fun x -> fst x |> string), (fun x -> snd x |> float)) |> Vega.send
     do! Async.Sleep 100
     if iter = 0 then () else
     return! loop data' <| iter - 1
 }
 
-loop [||] 25 |> Async.RunSynchronously
+loop [] 25 |> Async.RunSynchronously
 
 disposable.Dispose()
 ```

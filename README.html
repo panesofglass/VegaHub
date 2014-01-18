@@ -1,0 +1,48 @@
+﻿<h1>VegaHub</h1>
+
+<p>A SignalR Hub Utility for data scientists to push Vega charts from F# Interactive</p>
+
+<h2>Current Status</h2>
+
+<p>Proof-of-Concept</p>
+
+<h3>Available charts</h3>
+
+<ul>
+<li>bar</li>
+<li>colorBar</li>
+<li>force</li>
+<li>scatterplot</li>
+</ul>
+
+<h2>Building</h2>
+
+<p>Run build.bat to download NuGet.exe and build the solution. You can find samples in the samples folder.</p>
+
+<p>``` fsharp</p>
+
+<h1>r "..\build\VegaHub.dll"</h1>
+
+<p>open System<br/>
+open VegaHub<br/>
+open VegaHub.Grammar<br/>
+open VegaHub.Basics</p>
+
+<p>let disposable = Vega.connect "http://localhost:8081" <strong>SOURCE_DIRECTORY</strong></p>
+
+<p>// Simulate real-time updates<br/>
+let rand = Random(42)</p>
+
+<p>let rec loop data iter = async {<br/>
+    let data' = List.append data [ (data.Length, rand.Next(0, 100)) ]<br/>
+    // Warning: mutation!   <br/>
+    Basics.bar data' ((fun x -> fst x |> string), (fun x -> snd x |> float)) |> Vega.send<br/>
+    do! Async.Sleep 100<br/>
+    if iter = 0 then () else<br/>
+    return! loop data' &lt;| iter - 1<br/>
+}</p>
+
+<p>loop [] 25 |> Async.RunSynchronously</p>
+
+<p>disposable.Dispose()<br/>
+```</p>
