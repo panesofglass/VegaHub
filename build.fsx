@@ -1,25 +1,15 @@
-#if BOOT
-open Fake
-module FB = Fake.Boot
-FB.Prepare {
-    FB.Config.Default __SOURCE_DIRECTORY__ with
-        NuGetDependencies =
-            let (!!) x = FB.NuGetDependency.Create x
-            [
-                !!"FAKE"
-                !!"NuGet.Build"
-                !!"NuGet.Core"
-                !!"NUnit.Runners"
-            ]
-}
-#endif
+// --------------------------------------------------------------------------------------
+// FAKE build script 
+// --------------------------------------------------------------------------------------
 
-#load ".build/boot.fsx"
-
+#r @"packages/FAKE/tools/FakeLib.dll"
+open System
 open System.IO
 open Fake 
 open Fake.AssemblyInfoFile
+open Fake.Git
 open Fake.MSBuild
+open Fake.ReleaseNotesHelper
 
 (* properties *)
 let projectName = "VegaHub"
