@@ -44,14 +44,16 @@ let data =
             PetalWidth = line.[3] |> float;
             Class = line.[4]; })
 
-let disposable = Vega.Connect("http://localhost:8081", __SOURCE_DIRECTORY__)
+let requestUrl = "http://localhost:8081"
+let disposable = Vega.connect(requestUrl, __SOURCE_DIRECTORY__)
+System.Diagnostics.Process.Start(requestUrl + "/index.html")
 
 VegaHub.Basics.scatterplot (data |> Array.toList)
                 ((fun x -> x.PetalWidth), 
                 (fun x -> x.PetalWidth), 
                 (fun x -> x.Class),
                 (fun x -> 200.))
-|> Vega.Send
+|> Vega.send
 
 // Clustering Algorithm
 
@@ -107,7 +109,7 @@ let handleUpdate (update: (Observation * int) []) =
         (fun (x,y) -> x.PetalWidth) ,
         (fun (x,y) -> if x.Class = "Centroid" then "C" else y |> string), 
         (fun (x,y) -> if x.Class = "Centroid" then 300. else 100.))
-    |> Vega.Send
+    |> Vega.send
 
 let test = clusterize data distance reducer 3 handleUpdate
 
@@ -124,6 +126,6 @@ VegaHub.Basics.scatterplot (data2 |> Array.toList)
                 (fun x -> x.SepalLength |> float), 
                 (fun x -> x.Class),
                 (fun x -> 200.))
-|> Vega.Send
+|> Vega.send
 
 disposable.Dispose()

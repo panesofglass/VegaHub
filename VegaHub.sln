@@ -49,6 +49,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{
 		docs\tools\templates\template.cshtml = docs\tools\templates\template.cshtml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{03716F2B-B1A3-4557-9B41-E5C1CBCB7AED}"
+	ProjectSection(SolutionItems) = preProject
+		nuget\VegaHub.nuspec = nuget\VegaHub.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{2AB56F59-A40B-4264-B611-9ECC2516A157}"
+	ProjectSection(SolutionItems) = preProject
+		nuget\content\index.html = nuget\content\index.html
+		nuget\content\Script.fsx = nuget\content\Script.fsx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{B6EF6786-C691-48E5-95A7-2FCC192C41CB}"
+	ProjectSection(SolutionItems) = preProject
+		nuget\content\Scripts\app.js = nuget\content\Scripts\app.js
+		nuget\content\Scripts\d3.geo.projection.min.js = nuget\content\Scripts\d3.geo.projection.min.js
+		nuget\content\Scripts\d3.layout.cloud.js = nuget\content\Scripts\d3.layout.cloud.js
+		nuget\content\Scripts\d3.v3.min.js = nuget\content\Scripts\d3.v3.min.js
+		nuget\content\Scripts\topojson.js = nuget\content\Scripts\topojson.js
+		nuget\content\Scripts\vega.js = nuget\content\Scripts\vega.js
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,5 +94,7 @@ Global
 		{A16FA542-2BEE-4456-B15A-2CB7637ED165} = {871A40E0-2E68-4CCB-AA10-A0AD41A2333C}
 		{A48B9367-E07A-4725-95D8-9AFA8F721C59} = {849644DE-0018-40A5-B2B4-DF8D8014139A}
 		{4E080B8D-8F28-44C9-BA11-997FD3ADEE50} = {A16FA542-2BEE-4456-B15A-2CB7637ED165}
+		{2AB56F59-A40B-4264-B611-9ECC2516A157} = {03716F2B-B1A3-4557-9B41-E5C1CBCB7AED}
+		{B6EF6786-C691-48E5-95A7-2FCC192C41CB} = {2AB56F59-A40B-4264-B611-9ECC2516A157}
 	EndGlobalSection
 EndGlobal

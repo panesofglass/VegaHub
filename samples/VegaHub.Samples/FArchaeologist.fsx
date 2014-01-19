@@ -127,7 +127,9 @@ let twitter = connector.Connect("Your pin code")
 // Launch VegaHub and pump the nodes into the force chart
 // ----------------------------------------------------------------------------
 
-let disposable = Vega.Connect("http://localhost:8081", __SOURCE_DIRECTORY__)
+let requestUrl = "http://localhost:8081"
+let disposable = Vega.connect(requestUrl, __SOURCE_DIRECTORY__)
+System.Diagnostics.Process.Start(requestUrl + "/index.html")
 
 let shouldRun = ref true
 while !shouldRun do
@@ -135,7 +137,7 @@ while !shouldRun do
     Basics.force nodes (fun (n: Node) -> n.Name)
                  links ((fun (s,_,_) -> float s), (fun (_,t,_) -> float t), (fun (_,_,v) -> float v))
                  (70., -100., 1000)
-                 |> Vega.Send
+                 |> Vega.send
     System.Threading.Thread.Sleep 60000
 
 shouldRun := false

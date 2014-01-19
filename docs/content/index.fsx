@@ -48,7 +48,9 @@ This example demonstrates animating a bar chart using random values.
 
 *)
 
-let disposable = Vega.Connect("http://localhost:8081", __SOURCE_DIRECTORY__)
+let requestUrl = "http://localhost:8081"
+let disposable = Vega.connect(requestUrl, __SOURCE_DIRECTORY__)
+System.Diagnostics.Process.Start(requestUrl + "/index.html")
 
 // Simulate real-time updates
 let rand = Random(42)
@@ -56,7 +58,7 @@ let rand = Random(42)
 let rec loop data iter = async {
     let data' = List.append data [ (data.Length, rand.Next(0, 100)) ]
     // Warning: mutation!   
-    Basics.bar data' ((fun x -> fst x |> string), (fun x -> snd x |> float)) |> Vega.Send
+    Basics.bar data' ((fun x -> fst x |> string), (fun x -> snd x |> float)) |> Vega.send
     do! Async.Sleep 100
     if iter = 0 then () else
     return! loop data' <| iter - 1

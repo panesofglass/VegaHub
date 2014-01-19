@@ -44,7 +44,7 @@ let testAssemblies = "bin/VegaHub*Samples*exe"
 
 // Git configuration (used for publishing documentation in gh-pages branch)
 // The profile where the project is posted 
-let gitHome = "https://github.com/panesofglass"
+let gitHome = "git@github.com:panesofglass"
 // The name of the project on GitHub
 let gitName = "VegaHub"
 

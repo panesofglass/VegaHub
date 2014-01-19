@@ -1,4 +1,6 @@
-﻿// Include dependencies
+﻿// NOTE: You should build the current project first so that the required assemblies are found in bin/Debug.
+
+// Include dependencies
 #I """bin\Debug"""
 #r "Owin.dll"
 #r "Microsoft.Owin.dll"
@@ -20,7 +22,9 @@ open VegaHub
 open VegaHub.Grammar
 open VegaHub.Basics
 
-let disposable = Vega.Connect("http://localhost:8081", __SOURCE_DIRECTORY__)
+let requestUrl = "http://localhost:8081"
+let disposable = Vega.Connect(requestUrl, __SOURCE_DIRECTORY__)
+System.Diagnostics.Process.Start(requestUrl + "/index.html")
 
 // Simulate real-time updates
 let rand = Random(42)
