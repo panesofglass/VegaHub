@@ -1,5 +1,5 @@
 ﻿// Include dependencies
-#I """..\..\bin"""
+#I "../../bin"
 #r "Owin.dll"
 #r "Microsoft.Owin.dll"
 #r "Microsoft.Owin.FileSystems.dll"
@@ -16,12 +16,12 @@
 #r "VegaHub.dll"
 
 // Reference FSharp.Data
-#r """..\..\packages\FSharp.Data.1.1.10\lib\net40\FSharp.Data.dll"""
+#r "../../packages/FSharp.Data.1.1.10/lib/net40/FSharp.Data.dll"
 
 // Reference MathNet.Numerics
-#I """..\..\packages"""
-#r """MathNet.Numerics.2.6.2\lib\net40\MathNet.Numerics.dll"""
-#r """MathNet.Numerics.FSharp.2.6.0\lib\net40\MathNet.Numerics.FSharp.dll"""
+#I "../../packages"
+#r "MathNet.Numerics.2.6.2/lib/net40/MathNet.Numerics.dll"
+#r "MathNet.Numerics.FSharp.2.6.0/lib/net40/MathNet.Numerics.FSharp.dll"
 
 open System
 open System.Text

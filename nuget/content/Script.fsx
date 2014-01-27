@@ -1,7 +1,7 @@
 ﻿// NOTE: You should build the current project first so that the required assemblies are found in bin/Debug.
 
 // Include dependencies
-#I """bin\Debug"""
+#I "bin/Debug"
 #r "Owin.dll"
 #r "Microsoft.Owin.dll"
 #r "Microsoft.Owin.FileSystems.dll"

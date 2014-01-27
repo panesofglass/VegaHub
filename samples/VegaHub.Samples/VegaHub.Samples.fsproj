@@ -69,22 +69,18 @@
     <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.intellisense.js" />
-    <Content Include="Scripts\jquery.signalR-2.0.1.min.js" />
-    <Content Include="Scripts\jquery.signalR-2.0.1.js" />
     <Content Include="Scripts\d3.v3.min.js" />
     <Content Include="Scripts\d3.geo.projection.min.js" />
     <Content Include="Scripts\d3.layout.cloud.js" />
     <Content Include="Scripts\topojson.js" />
     <Content Include="Scripts\vega.js" />
     <Content Include="Scripts\app.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.2.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.2.js" />
     <None Include="packages.config" />
     <None Include="index.html" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="canopy">
-      <HintPath>..\..\packages\canopy.0.9.1\lib\canopy.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="FSharp.Data">
       <HintPath>..\..\packages\FSharp.Data.1.1.10\lib\net40\FSharp.Data.dll</HintPath>
       <Private>True</Private>

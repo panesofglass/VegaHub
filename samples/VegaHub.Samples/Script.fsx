@@ -1,5 +1,5 @@
 ﻿// Include dependencies
-#I """..\..\bin"""
+#I "../../bin"
 #r "Owin.dll"
 #r "Microsoft.Owin.dll"
 #r "Microsoft.Owin.FileSystems.dll"

@@ -1,5 +1,5 @@
 ﻿// Include dependencies
-#I """..\..\bin"""
+#I "../../bin"
 #r "Owin.dll"
 #r "Microsoft.Owin.dll"
 #r "Microsoft.Owin.FileSystems.dll"
@@ -16,7 +16,7 @@
 #r "VegaHub.dll"
 
 // Reference FSharp.Data
-#r """..\..\packages\FSharp.Data.1.1.10\lib\net40\FSharp.Data.dll"""
+#r "../../packages/FSharp.Data.1.1.10/lib/net40/FSharp.Data.dll"
 
 // Reference Twitter.API
 #r "references/Twitter.API.dll"
