@@ -6,6 +6,8 @@ A SignalR Hub Utility for data scientists to push Vega charts from F# Interactiv
 Current Status
 --------------
 
+[![Build Status](https://travis-ci.org/panesofglass/VegaHub.png?branch=master)](https://travis-ci.org/panesofglass/VegaHub)
+
 Proof-of-Concept
 
 ### Available charts
