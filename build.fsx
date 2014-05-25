@@ -2,13 +2,23 @@
 // FAKE build script 
 // --------------------------------------------------------------------------------------
 
-#r "packages/FAKE/tools/FakeLib.dll"
-#r "packages/FAKE/tools/NuGet.Core.dll"
+#I "packages/FAKE/tools/"
+#r "FakeLib.dll"
+
+#if MONO
+#else
+#load "packages/SourceLink.Fake/tools/SourceLink.fsx"
+#endif
+
 open System
+open System.IO
 open Fake 
 open Fake.AssemblyInfoFile
 open Fake.Git
 open Fake.ReleaseNotesHelper
+
+Environment.CurrentDirectory <- __SOURCE_DIRECTORY__
+let (!!) includes = (!! includes).SetBaseDirectory __SOURCE_DIRECTORY__
 
 // --------------------------------------------------------------------------------------
 // Provide project-specific details below
@@ -48,14 +58,18 @@ let testAssemblies = "bin/VegaHub*Samples*exe"
 let gitHome = "git@github.com:panesofglass"
 // The name of the project on GitHub
 let gitName = "VegaHub"
+let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/panesofglass"
 
 // --------------------------------------------------------------------------------------
 // The rest of the file includes standard build steps 
 // --------------------------------------------------------------------------------------
 
 // Read additional information from the release notes document
-Environment.CurrentDirectory <- __SOURCE_DIRECTORY__
 let release = parseReleaseNotes (IO.File.ReadAllLines "RELEASE_NOTES.md")
+let isAppVeyorBuild = environVar "APPVEYOR" <> null
+let nugetVersion = 
+    if isAppVeyorBuild then sprintf "%s.%s" release.NugetVersion buildVersion
+    else release.NugetVersion
 
 // Generate assembly info files with the right version & up-to-date information
 Target "AssemblyInfo" (fun _ ->
@@ -67,16 +81,22 @@ Target "AssemblyInfo" (fun _ ->
         Attribute.Version release.AssemblyVersion
         Attribute.FileVersion release.AssemblyVersion ] )
 
+Target "BuildVersion" (fun _ ->
+    Shell.Exec("appveyor", sprintf "UpdateBuild -Version \"%s\"" nugetVersion) |> ignore
+)
+
 // --------------------------------------------------------------------------------------
 // Clean build results & restore NuGet packages
 
 Target "RestorePackages" RestorePackages
 
 Target "Clean" (fun _ ->
-    CleanDirs ["bin"; "temp"])
+    CleanDirs ["bin"; "temp"]
+)
 
 Target "CleanDocs" (fun _ ->
-    CleanDirs ["docs/output"])
+    CleanDirs ["docs/output"]
+)
 
 // --------------------------------------------------------------------------------------
 // Build library & test project
@@ -84,10 +104,32 @@ Target "CleanDocs" (fun _ ->
 Target "Build" (fun _ ->
     !! ("*/**/" + projectFile + "*.*proj")
     |> MSBuildRelease "bin" "Rebuild"
-    |> ignore)
+    |> ignore
+)
+
+#if MONO
+Target "SourceLink" <| id
+#else
+open SourceLink
+
+Target "SourceLink" (fun _ ->
+    use repo = new GitRepo(__SOURCE_DIRECTORY__)
+    !! ("*/**/" + projectFile + "*.*proj")
+    |> Seq.iter (fun f ->
+        let proj = VsProj.Load f ["Configuration", "Release"; "OutputPath", Path.combine __SOURCE_DIRECTORY__ "bin"]
+        logfn "source linking %s" proj.OutputFilePdb
+        let files = proj.Compiles -- "**/AssemblyInfo.fs"
+        repo.VerifyChecksums files
+        proj.VerifyPdbChecksums files
+        proj.CreateSrcSrv (sprintf "%s/%s/{0}/%%var2%%" gitRaw gitName) repo.Revision (repo.Paths files)
+        Pdbstr.exec proj.OutputFilePdb proj.OutputFilePdbSrcSrv
+    )
+)
+#endif
 
 Target "CopyLicense" (fun _ ->
-    [ "LICENSE.txt" ] |> CopyTo "bin")
+    [ "LICENSE.txt" ] |> CopyTo "bin"
+)
 
 // --------------------------------------------------------------------------------------
 // Run the unit tests using test runner
@@ -98,7 +140,8 @@ Target "RunTests" (fun _ ->
         { p with
             DisableShadowCopy = true
             TimeOut = TimeSpan.FromMinutes 20.
-            OutputFile = "TestResults.xml" }))
+            OutputFile = "TestResults.xml" })
+)
 
 // --------------------------------------------------------------------------------------
 // Build a NuGet package
@@ -131,13 +174,15 @@ Target "NuGet" (fun _ ->
                                 "Microsoft.AspNet.SignalR.JS"
                             ]
         })
-        ("nuget/" + project + ".nuspec"))
+        ("nuget/" + project + ".nuspec")
+)
 
 // --------------------------------------------------------------------------------------
 // Generate the documentation
 
 Target "GenerateDocs" (fun _ ->
-    executeFSIWithArgs "docs/tools" "generate.fsx" ["--define:RELEASE"] [] |> ignore)
+    executeFSIWithArgs "docs/tools" "generate.fsx" ["--define:RELEASE"] [] |> ignore
+)
 
 // --------------------------------------------------------------------------------------
 // Release Scripts
@@ -151,7 +196,8 @@ Target "ReleaseDocs" (fun _ ->
     CopyRecursive "docs/output" ghPages true |> tracefn "%A"
     StageAll ghPages
     Commit ghPages (sprintf "Update generated documentation for version %s" release.NugetVersion)
-    Branches.push ghPages)
+    Branches.push ghPages
+)
 
 Target "Release" DoNothing
 
@@ -161,12 +207,14 @@ Target "Release" DoNothing
 Target "All" DoNothing
 
 "Clean"
+  =?> ("BuildVersion", isAppVeyorBuild)
   ==> "RestorePackages"
   ==> "AssemblyInfo"
   ==> "Build"
+  =?> ("SourceLink", not isMono && not (hasBuildParam "skipSourceLink"))
   ==> "CopyLicense"
   ==> "RunTests"
-  ==> "NuGet"
+  =?> ("NuGet", not isMono)
   ==> "All"
 
 "All" 
